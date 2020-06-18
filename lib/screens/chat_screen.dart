@@ -4,7 +4,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 final _firestore = Firestore.instance;
-FirebaseUser loggedInUser;
+FirebaseUser loggedinuser;
 
 class ChatScreen extends StatefulWidget {
   static const String id = 'chat_screen';
@@ -13,24 +13,19 @@ class ChatScreen extends StatefulWidget {
 }
 
 class _ChatScreenState extends State<ChatScreen> {
-  final messageTextController = TextEditingController();
   final _auth = FirebaseAuth.instance;
-
-  String messageText;
-
+  final textcontroller = TextEditingController();
+  String messagetext;
   @override
   void initState() {
     super.initState();
-
     getCurrentUser();
   }
 
   void getCurrentUser() async {
     try {
       final user = await _auth.currentUser();
-      if (user != null) {
-        loggedInUser = user;
-      }
+      if (user != null) loggedinuser = user;
     } catch (e) {
       print(e);
     }
@@ -45,6 +40,7 @@ class _ChatScreenState extends State<ChatScreen> {
           IconButton(
               icon: Icon(Icons.close),
               onPressed: () {
+                //Implement logout functionality
                 _auth.signOut();
                 Navigator.pop(context);
               }),
@@ -57,7 +53,7 @@ class _ChatScreenState extends State<ChatScreen> {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: <Widget>[
-            MessagesStream(),
+            MessageStream(),
             Container(
               decoration: kMessageContainerDecoration,
               child: Row(
@@ -65,20 +61,23 @@ class _ChatScreenState extends State<ChatScreen> {
                 children: <Widget>[
                   Expanded(
                     child: TextField(
-                      controller: messageTextController,
+                      controller: textcontroller,
                       onChanged: (value) {
-                        messageText = value;
+                        //Do something with the user input.
+                        messagetext = value;
                       },
                       decoration: kMessageTextFieldDecoration,
                     ),
                   ),
                   FlatButton(
                     onPressed: () {
-                      messageTextController.clear();
-                      _firestore.collection('messages').add({
-                        'text': messageText,
-                        'sender': loggedInUser.email,
-                      });
+                      textcontroller.clear();
+                      //Implement send functionality.
+                      if (messagetext != null)
+                        _firestore.collection('messages').add({
+                          'sender': loggedinuser.email,
+                          'text': messagetext
+                        });
                     },
                     child: Text(
                       'Send',
@@ -95,7 +94,7 @@ class _ChatScreenState extends State<ChatScreen> {
   }
 }
 
-class MessagesStream extends StatelessWidget {
+class MessageStream extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return StreamBuilder<QuerySnapshot>(
@@ -111,18 +110,15 @@ class MessagesStream extends StatelessWidget {
         final messages = snapshot.data.documents.reversed;
         List<MessageBubble> messageBubbles = [];
         for (var message in messages) {
-          final messageText = message.data['text'];
-          final messageSender = message.data['sender'];
+          final messagetext = message.data['text'];
+          final sender = message.data['sender'];
+          final currentuser = loggedinuser.email;
 
-          final currentUser = loggedInUser.email;
-
-          final messageBubble = MessageBubble(
-            sender: messageSender,
-            text: messageText,
-            isMe: currentUser == messageSender,
-          );
-
-          messageBubbles.add(messageBubble);
+          final messgeBubble = MessageBubble(
+              messagetext: messagetext,
+              sender: sender,
+              isMe: currentuser == sender);
+          messageBubbles.add(messgeBubble);
         }
         return Expanded(
           child: ListView(
@@ -137,11 +133,10 @@ class MessagesStream extends StatelessWidget {
 }
 
 class MessageBubble extends StatelessWidget {
-  MessageBubble({this.sender, this.text, this.isMe});
-
+  MessageBubble({this.messagetext, this.sender, this.isMe});
+  final String messagetext;
   final String sender;
-  final String text;
-  final bool isMe;
+  final isMe;
 
   @override
   Widget build(BuildContext context) {
@@ -151,34 +146,32 @@ class MessageBubble extends StatelessWidget {
         crossAxisAlignment:
             isMe ? CrossAxisAlignment.end : CrossAxisAlignment.start,
         children: <Widget>[
-          Text(
-            sender,
-            style: TextStyle(
-              fontSize: 12.0,
-              color: Colors.black54,
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Text(
+              sender,
+              style: TextStyle(color: Colors.black54, fontSize: 12.0),
             ),
           ),
           Material(
+            elevation: 5.0,
             borderRadius: isMe
                 ? BorderRadius.only(
                     topLeft: Radius.circular(30.0),
                     bottomLeft: Radius.circular(30.0),
                     bottomRight: Radius.circular(30.0))
                 : BorderRadius.only(
-                    bottomLeft: Radius.circular(30.0),
-                    bottomRight: Radius.circular(30.0),
                     topRight: Radius.circular(30.0),
-                  ),
-            elevation: 5.0,
+                    bottomLeft: Radius.circular(30.0),
+                    bottomRight: Radius.circular(30.0)),
             color: isMe ? Colors.lightBlueAccent : Colors.white,
             child: Padding(
-              padding: EdgeInsets.symmetric(vertical: 10.0, horizontal: 20.0),
+              padding: EdgeInsets.symmetric(horizontal: 20.0, vertical: 10.0),
               child: Text(
-                text,
+                messagetext,
                 style: TextStyle(
-                  color: isMe ? Colors.white : Colors.black54,
-                  fontSize: 15.0,
-                ),
+                    fontSize: 15.0,
+                    color: isMe ? Colors.white : Colors.black54),
               ),
             ),
           ),

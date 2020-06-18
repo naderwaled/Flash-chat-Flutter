@@ -1,39 +1,34 @@
 import 'package:flutter/material.dart';
-import 'login_screen.dart';
 import 'registration_screen.dart';
+import 'login_screen.dart';
 import 'package:animated_text_kit/animated_text_kit.dart';
 import 'package:flash_chat/components/rounded_button.dart';
 
 class WelcomeScreen extends StatefulWidget {
   static const String id = 'welcome_screen';
-
   @override
   _WelcomeScreenState createState() => _WelcomeScreenState();
 }
 
 class _WelcomeScreenState extends State<WelcomeScreen>
     with SingleTickerProviderStateMixin {
-  AnimationController controller;
+  AnimationController animationController;
   Animation animation;
-
   @override
   void initState() {
     super.initState();
-
-    controller =
-        AnimationController(duration: Duration(seconds: 1), vsync: this);
+    animationController = AnimationController(
+      vsync: this,
+      duration: Duration(seconds: 1),
+    );
+    animation =
+        CurvedAnimation(parent: animationController, curve: Curves.decelerate);
     animation = ColorTween(begin: Colors.blueGrey, end: Colors.white)
-        .animate(controller);
-    controller.forward();
-    controller.addListener(() {
+        .animate(animationController);
+    animationController.forward();
+    animationController.addListener(() {
       setState(() {});
     });
-  }
-
-  @override
-  void dispose() {
-    controller.dispose();
-    super.dispose();
   }
 
   @override
@@ -52,15 +47,17 @@ class _WelcomeScreenState extends State<WelcomeScreen>
                   tag: 'logo',
                   child: Container(
                     child: Image.asset('images/logo.png'),
-                    height: 60.0,
+                    height: 80.0,
                   ),
                 ),
                 TypewriterAnimatedTextKit(
                   text: ['Flash Chat'],
                   textStyle: TextStyle(
-                    fontSize: 45.0,
+                    fontSize: 40.0,
                     fontWeight: FontWeight.w900,
                   ),
+                  textAlign: TextAlign.start,
+                  alignment: AlignmentDirectional.topStart,
                 ),
               ],
             ),
@@ -69,15 +66,15 @@ class _WelcomeScreenState extends State<WelcomeScreen>
             ),
             RoundedButton(
               title: 'Log In',
-              colour: Colors.lightBlueAccent,
-              onPressed: () {
+              color: Colors.lightBlueAccent,
+              onPreesed: () {
                 Navigator.pushNamed(context, LoginScreen.id);
               },
             ),
             RoundedButton(
               title: 'Register',
-              colour: Colors.blueAccent,
-              onPressed: () {
+              color: Colors.blueAccent,
+              onPreesed: () {
                 Navigator.pushNamed(context, RegistrationScreen.id);
               },
             ),

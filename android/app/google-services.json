@@ -1,34 +1,34 @@
 {
   "project_info": {
-    "project_number": "1055788443339",
-    "firebase_url": "https://flash-chat-58a2a.firebaseio.com",
-    "project_id": "flash-chat-58a2a",
-    "storage_bucket": "flash-chat-58a2a.appspot.com"
+    "project_number": "93022148813",
+    "firebase_url": "https://flash-chat-66e1a.firebaseio.com",
+    "project_id": "flash-chat-66e1a",
+    "storage_bucket": "flash-chat-66e1a.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:1055788443339:android:26ee5a166746f262",
+        "mobilesdk_app_id": "1:93022148813:android:6557faf262d28b93a57184",
         "android_client_info": {
-          "package_name": "co.appbrewery.flash_chat"
+          "package_name": "co.naderwaled.flash_chat"
         }
       },
       "oauth_client": [
         {
-          "client_id": "1055788443339-o0dpvs896iv6ju6s3kqhkndv0bt8cgoc.apps.googleusercontent.com",
+          "client_id": "93022148813-v9ksq6e0fvc0c5ggosivvg071tlu5tr7.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyD6rctF2MNCGAIz2K70BQvTBfSJPHaaCqo"
+          "current_key": "AIzaSyAVwPFmrKaY-j0peC9rzbfL3zKu9vYRM_Q"
         }
       ],
       "services": {
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "1055788443339-o0dpvs896iv6ju6s3kqhkndv0bt8cgoc.apps.googleusercontent.com",
+              "client_id": "93022148813-v9ksq6e0fvc0c5ggosivvg071tlu5tr7.apps.googleusercontent.com",
               "client_type": 3
             }
           ]
